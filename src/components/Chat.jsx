@@ -9,9 +9,7 @@ function Chat() {
   const [loading, setLoading] = useState(false);
   const [sessionId, setSessionId] = useState(null);
 
-  // Initialize session when component mounts
   useEffect(() => {
-    // Generate a new session ID
     const newSessionId = startNewConversation();
     setSessionId(newSessionId);
   }, []);
@@ -19,21 +17,17 @@ function Chat() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!input.trim()) return;
-    
+
     setError('');
     setLoading(true);
-    
-    // Add user message to chat history
     const userMessage = input.trim();
-    setMessages(prevMessages => [...prevMessages, { type: 'user', text: userMessage }]);
-    setInput(''); // Clear input
+
+    setMessages(prev => [...prev, { type: 'user', text: userMessage }]);
+    setInput('');
 
     try {
-      // Send message to Bedrock agent
       const reply = await askAgent(userMessage, sessionId);
-      
-      // Add agent response to chat history
-      setMessages(prevMessages => [...prevMessages, { type: 'agent', text: reply }]);
+      setMessages(prev => [...prev, { type: 'agent', text: reply }]);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -42,7 +36,6 @@ function Chat() {
   };
 
   const startNewChat = () => {
-    // Reset everything
     const newSessionId = startNewConversation();
     setSessionId(newSessionId);
     setMessages([]);
@@ -50,69 +43,85 @@ function Chat() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100 p-4">
-      <div className="max-w-3xl w-full mx-auto flex flex-col flex-grow">
-        <h1 className="text-2xl font-bold mb-4">Bedrock Agent Chat</h1>
-        
-        <button 
-          onClick={startNewChat} 
-          className="mb-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded self-end"
-        >
-          New Conversation
-        </button>
-        
-        {/* Chat messages */}
-        <div className="flex-grow overflow-y-auto bg-white rounded-lg p-4 mb-4 shadow">
+    <div className="min-h-screen bg-gray-900 text-gray-100 flex flex-col items-center p-4">
+      <div className="w-full max-w-3xl flex flex-col flex-grow bg-gray-800 rounded-xl shadow-2xl border border-gray-700">
+        <div className="flex justify-between items-center px-6 py-4 border-b border-gray-700">
+          <h1 className="text-3xl font-semibold tracking-tight text-blue-400 drop-shadow-sm">Sonnet Chat</h1>
+          <button 
+            onClick={startNewChat} 
+            className="text-sm bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded transition-colors duration-200"
+          >
+            New Conversation
+          </button>
+        </div>
+
+        <div className="flex-grow overflow-y-auto px-6 py-4 space-y-4 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900">
           {messages.length === 0 ? (
-            <div className="h-full flex items-center justify-center text-gray-500">
-              <p>Start a conversation with the agent...</p>
+            <div className="flex justify-center items-center h-full text-gray-500 italic">
+              Start a conversation with the agent...
             </div>
-          ) : (
-            <div className="space-y-4">
-              {messages.map((msg, idx) => (
-                <div 
-                  key={idx} 
-                  className={`p-3 rounded-lg ${
-                    msg.type === 'user' 
-                      ? 'bg-blue-100 ml-auto max-w-[80%]' 
-                      : 'bg-gray-100 mr-auto max-w-[80%]'
+          ) : (<div className="space-y-6">
+            {messages.map((msg, idx) => (
+              <div
+                key={idx}
+                className={`flex flex-col ${
+                  msg.type === 'user' ? 'items-end' : 'items-start'
+                }`}
+              >
+                <div
+                  className={`max-w-[75%] px-4 py-3 rounded-lg shadow-md ${
+                    msg.type === 'user'
+                      ? 'bg-blue-600 text-white rounded-tr-none'
+                      : 'bg-gray-700 text-gray-200 rounded-tl-none'
                   }`}
                 >
                   <p className="whitespace-pre-wrap">{msg.text}</p>
                 </div>
-              ))}
-              
-              {loading && (
-                <div className="bg-gray-100 p-3 rounded-lg mr-auto max-w-[80%]">
-                  <p className="text-gray-500">Thinking...</p>
+                <div className="mt-1">
+                  <img
+                    src={
+                      msg.type === 'user'
+                        ? 'https://cdn-icons-png.flaticon.com/512/1144/1144760.png' // user avatar
+                        : '/mnt/data/0916f87f-6576-48c0-9e37-3725fa84590f.png'       
+                    }
+                    alt={`${msg.type} avatar`}
+                    className="w-4 h-4 rounded-full opacity-80"
+                  />
                 </div>
-              )}
+              </div>
+            ))}
+          </div>)}
+
+          {loading && (
+            <div className="max-w-[75%] bg-gray-700 text-gray-400 px-4 py-3 rounded-lg shadow self-start">
+              Thinking...
             </div>
           )}
         </div>
-        
-        {/* Input form */}
-        <form onSubmit={handleSubmit} className="flex gap-2">
+
+        <form 
+          onSubmit={handleSubmit} 
+          className="flex gap-3 px-6 py-4 bg-gray-800 border-t border-gray-700"
+        >
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            className="flex-grow p-3 rounded border border-gray-300"
+            className="flex-grow px-4 py-3 rounded-lg bg-gray-900 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-700"
             placeholder="Type your message..."
             disabled={loading}
           />
           <button
             type="submit"
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
+            className="px-6 py-3 rounded-lg bg-blue-600 hover:bg-blue-500 transition-colors duration-200 text-white font-medium disabled:opacity-50"
             disabled={loading || !input.trim()}
           >
             Send
           </button>
         </form>
-        
-        {/* Error display */}
+
         {error && (
-          <div className="mt-4 bg-red-100 text-red-800 p-3 rounded">
+          <div className="px-6 pb-4 text-red-400 text-sm">
             {error}
           </div>
         )}
