@@ -6,7 +6,7 @@ const Home = () => {
     <div className="min-h-screen bg-black text-white font-sans">
       {/* Header */}
       <header className="flex items-center justify-between px-10 py-6 border-b border-gray-800">
-        <h1 className="text-2xl font-bold tracking-tight">👟 Sonnet Chat</h1>
+        <h1 className="text-2xl font-bold tracking-tight">Sonnet Chat</h1>
         <div className="space-x-4">
           <button className="bg-transparent text-white hover:underline">Login</button>
           <button className="bg-white text-black px-4 py-2 rounded hover:bg-gray-200">Sign Up</button>

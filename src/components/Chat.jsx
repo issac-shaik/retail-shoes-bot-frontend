@@ -81,11 +81,11 @@ function Chat() {
                   <img
                     src={
                       msg.type === 'user'
-                        ? 'https://cdn-icons-png.flaticon.com/512/1144/1144760.png' // user avatar
-                        : '/mnt/data/0916f87f-6576-48c0-9e37-3725fa84590f.png'       
+                        ? 'https://cdn-icons-png.flaticon.com/128/3177/3177440.png' // user avatar
+                        : 'https://cdn-icons-png.flaticon.com/128/10479/10479785.png' // agent avatar    
                     }
-                    alt={`${msg.type} avatar`}
-                    className="w-4 h-4 rounded-full opacity-80"
+                    alt={`${msg.type}`}
+                    className="w-5 h-5 rounded-full opacity-80"
                   />
                 </div>
               </div>
@@ -93,10 +93,15 @@ function Chat() {
           </div>)}
 
           {loading && (
-            <div className="max-w-[75%] bg-gray-700 text-gray-400 px-4 py-3 rounded-lg shadow self-start">
-              Thinking...
-            </div>
-          )}
+  <div className="max-w-[75%] bg-gray-700 text-gray-400 px-4 py-3 rounded-lg shadow self-start">
+    <div className="flex gap-1 items-end h-5">
+      <span className="w-2 h-2 bg-gray-300 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+      <span className="w-2 h-2 bg-gray-300 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+      <span className="w-2 h-2 bg-gray-300 rounded-full animate-bounce"></span>
+    </div>
+  </div>
+)}
+
         </div>
 
         <form 

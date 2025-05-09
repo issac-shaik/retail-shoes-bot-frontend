@@ -1,4 +1,3 @@
-// src/bedrockClient.js
 import { v4 as uuid } from 'uuid';
 
 // Store session ID outside the function so it persists
